@@ -1,0 +1,9 @@
+Generate a playwright test for the following scenario
+1) navigate to http://www.automationpractice.pl/index.php
+2) search for 't-shirts'
+3) verify the "faded short sleeve T-shirts' in the list
+
+
+
+vibe coding process: 
+means without writing a code we just give instructions and generates code for us
