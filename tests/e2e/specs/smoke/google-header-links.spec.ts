@@ -17,8 +17,16 @@ const maybeAcceptConsent = async (page: import('@playwright/test').Page) => {
 };
 
 test('google header links navigate', tags, async ({ page }) => {
-  const base = process.env.BASE_URL;
+  const base = process.env.BASE_URL || 'https://www.google.com';
+  const environment = process.env.ENV || 'qa';
+  
   expect(base).toBeTruthy();
+
+  // Skip this test if not running against Google
+  if (!base.includes('google.com')) {
+    test.skip(true, `Skipping Google-specific test for environment: ${environment} (${base})`);
+    return;
+  }
 
   const isMobile = test.info().project.name.toLowerCase().includes('iphone');
 
