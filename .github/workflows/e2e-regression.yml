@@ -1,0 +1,33 @@
+name: E2E Regression
+
+on:
+  push:
+    branches: [ "qa" ]
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install deps (tests subproject)
+        working-directory: tests
+        run: npm ci
+      - name: Install Playwright Browsers
+        working-directory: tests
+        run: npx playwright install --with-deps
+      - name: Run regression (all projects)
+        env:
+          ENV: qa
+        working-directory: tests
+        run: npx playwright test --reporter=line
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-regression-report
+          path: tests/playwright-report
+          if-no-files-found: ignore

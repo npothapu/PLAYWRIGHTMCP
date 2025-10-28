@@ -1,0 +1,41 @@
+name: JMeter (Docker)
+
+on:
+  push:
+    branches: [ "qa" ]
+
+jobs:
+  loadtest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build JMeter image
+        working-directory: perf/docker
+        run: docker compose build jmeter
+
+      - name: Run JMeter in Docker
+        working-directory: perf/docker
+        env:
+          ENV_NAME: qa
+          USERS: '10'
+          RAMP_UP: '1'
+          LOOPS: '1'
+        run: |
+          docker compose run --rm jmeter \
+            -n -t /tests/google-loadtest.jmx \
+            -l /tests/results/results.jtl \
+            -e -o /tests/reports/html-report \
+            -q /tests/env/${ENV_NAME}.properties \
+            -Jusers=${USERS} -JrampUp=${RAMP_UP} -Jloops=${LOOPS}
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-html-report
+          path: perf/jmeter/reports/html-report
+          if-no-files-found: error

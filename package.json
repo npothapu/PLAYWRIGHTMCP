@@ -3,28 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test",
-    "test:prod": "cross-env ENV=PROD playwright test",
-    "test:stg": "cross-env ENV=STG playwright test",
-    "test:prod:headed": "cross-env ENV=PROD playwright test --headed",
-    "test:stg:headed": "cross-env ENV=STG playwright test --headed",
-    "test:mobile": "cross-env ENV=PROD playwright test --project=iphone-12 pixel-7",
-    "test:mobile:stg": "cross-env ENV=STG playwright test --project=iphone-12 pixel-7",
-    "test:links": "cross-env ENV=PROD playwright test --grep=@links",
-    "test:links:stg": "cross-env ENV=STG playwright test --grep=@links",
-    "test:links:header": "cross-env ENV=PROD playwright test --grep=@header",
-    "test:links:footer": "cross-env ENV=PROD playwright test --grep=@footer"
+    "jmeter:docker": "powershell -ExecutionPolicy Bypass -File ./scripts/run-jmeter-docker.ps1 -Users 10 -RampUp 1 -Loops 1",
+    "test:functional": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Set-Location -Path './tests'; if (!(Test-Path node_modules)) { npm ci }; npx playwright install --with-deps; npx playwright test --reporter=line\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {
-    "@playwright/test": "^1.55.0",
-    "@types/node": "^24.3.1",
-    "cross-env": "^10.0.0"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5"
-  }
+  "devDependencies": {}
 }

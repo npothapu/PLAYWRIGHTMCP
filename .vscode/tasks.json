@@ -1,0 +1,86 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run JMeter (Docker, local)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"${workspaceFolder}/scripts/run-jmeter-docker.ps1",
+				"-Users",
+				"10",
+				"-RampUp",
+				"1",
+				"-Loops",
+				"1",
+				"-Env",
+				"qa"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Run Playwright (HTML Report)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-Command",
+				"Set-Location -Path '${workspaceFolder}/tests'; if (!(Test-Path node_modules)) { npm ci }; npx playwright install --with-deps; npx playwright test --reporter=html"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Open Playwright Report",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-Command",
+				"Set-Location -Path '${workspaceFolder}/tests'; npx playwright show-report"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Open JMeter Report",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-Command",
+				"$p='${workspaceFolder}/perf/jmeter/reports/html-report/index.html'; if (Test-Path $p) { Start-Process $p } else { Write-Host 'Report not found:' $p }"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Run Both (Reports)",
+			"type": "shell",
+			"command": "powershell",
+			"args": ["-NoProfile","-Command","Write-Host 'Running Playwright + JMeter'"],
+			"dependsOn": [
+				"Run Playwright (HTML Report)",
+				"Open Playwright Report",
+				"Run JMeter (Docker)",
+				"Open JMeter Report"
+			],
+			"dependsOrder": "sequence",
+			"group": "test"
+		}
+	]
+}
