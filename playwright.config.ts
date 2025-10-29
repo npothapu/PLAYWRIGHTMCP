@@ -44,7 +44,8 @@ console.log(`🔗 BASE_URL: ${process.env.BASE_URL}`);
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
+  // Enforce no accidental .only commits in any environment
+  forbidOnly: true,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 2 : undefined,
   

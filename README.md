@@ -556,6 +556,23 @@ Running API load test...
 2. **Raw Results**: Available in `perf/jmeter/results/results.jtl`
 3. **VS Code Task**: Use "Open JMeter Report" task to view latest report
 
+### 🧱 What’s in the JMX (industry standards)
+
+The JMeter test plan follows common API load testing best practices:
+
+- HTTP Request Defaults: centralizes protocol, domain, timeouts using variables (${protocol}, ${domain})
+- HTTP Header Manager: Accept, Content-Type, User-Agent, Cache-Control
+- Assertions:
+  - HTTP Status Code 200
+  - Content-Type contains application/json
+  - Response time under 5 seconds
+  - JSONPath structure checks (page, data[0].id exists)
+- Think Time: Uniform Random Timer (1–3s) to simulate user pacing
+- Cookie and DNS Managers: realistic HTTP behavior
+- CSV Data Set Config (disabled by default): sample file at perf/jmeter/plans/data/test-data.csv
+
+Want to parameterize the page query? Enable the CSV Data Set in the JMX and switch the request argument to use ${page}. The CSV is provided but remains disabled to keep default behavior identical.
+
 ### 🚨 **Prerequisites & Troubleshooting**
 
 #### **Required Software:**
