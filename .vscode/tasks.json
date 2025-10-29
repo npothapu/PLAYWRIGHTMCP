@@ -16,8 +16,6 @@
 				"1",
 				"-Loops",
 				"1",
-				"-Throughput",
-				"60",
 				"-Env",
 				"qa"
 			],
