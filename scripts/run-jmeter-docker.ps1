@@ -2,6 +2,7 @@ param(
   [int]$Users = 10,
   [int]$RampUp = 1,
   [int]$Loops = 1,
+  [double]$Throughput = 60.0,  # Requests per minute
   [ValidateSet('dev','qa','prod')]
   [string]$Env = 'qa'
 )
@@ -30,6 +31,14 @@ if ($Env -eq 'prod') {
 
 $RepoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $RepoRoot
+
+Write-Host "🚀 JMeter Load Test Configuration:" -ForegroundColor Cyan
+Write-Host "  • Environment: $Env" -ForegroundColor White
+Write-Host "  • Users: $Users" -ForegroundColor White
+Write-Host "  • RampUp: $RampUp seconds" -ForegroundColor White
+Write-Host "  • Loops: $Loops" -ForegroundColor White
+Write-Host "  • Throughput: $Throughput requests/minute" -ForegroundColor White
+Write-Host ""
 
 # Helpful status about report locations (legacy vs active)
 $legacyReport = Join-Path $RepoRoot 'jmeter/results/html-report/index.html'
@@ -111,7 +120,8 @@ $cmd = @(
   '-q',"/tests/env/$Env.properties",
   "-Jusers=$Users",
   "-JrampUp=$RampUp",
-  "-Jloops=$Loops"
+  "-Jloops=$Loops",
+  "-Jthroughput=$Throughput"
 )
 
 # Build
