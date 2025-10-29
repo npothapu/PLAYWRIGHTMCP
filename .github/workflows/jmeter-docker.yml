@@ -1,11 +1,11 @@
-name: JMeter (Docker)
+name: JMeter API Load Test (Docker)
 
 on:
   push:
     branches: [ "qa" ]
 
 jobs:
-  loadtest:
+  api-loadtest:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,7 +18,7 @@ jobs:
         working-directory: perf/docker
         run: docker compose build jmeter
 
-      - name: Run JMeter in Docker
+      - name: Run API Load Test with JMeter
         working-directory: perf/docker
         env:
           ENV_NAME: qa
@@ -26,6 +26,7 @@ jobs:
           RAMP_UP: '1'
           LOOPS: '1'
         run: |
+          echo "🚀 Running API Load Test against: https://reqres.in/api/users?page=2"
           docker compose run --rm jmeter \
             -n -t /tests/google-loadtest.jmx \
             -l /tests/results/results.jtl \
@@ -33,9 +34,9 @@ jobs:
             -q /tests/env/${ENV_NAME}.properties \
             -Jusers=${USERS} -JrampUp=${RAMP_UP} -Jloops=${LOOPS}
 
-      - name: Upload HTML report
+      - name: Upload API Load Test Report
         uses: actions/upload-artifact@v4
         with:
-          name: jmeter-html-report
+          name: api-loadtest-html-report
           path: perf/jmeter/reports/html-report
           if-no-files-found: error

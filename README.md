@@ -23,6 +23,183 @@ npm run test:report
 
 ---
 
+## 📋 How to Run Commands - Complete Guide
+
+### 🎯 **Quick Testing Commands**
+
+```bash
+# 🚀 FASTEST - Smoke tests (recommended for quick validation)
+npm run test:smoke:qa           # QA smoke tests (~2 min)
+npm run test:smoke:dev          # DEV smoke tests (~2 min)
+npm run test:smoke:prod         # PROD smoke tests (~2 min)
+
+# 📊 COMPREHENSIVE - Full regression tests
+npm run test:regression:qa      # QA full suite (~10 min)
+npm run test:regression:dev     # DEV full suite (~10 min)
+
+# 🌐 BROWSER-SPECIFIC - Single browser testing  
+npm run test:chromium           # Chromium only (~5 min)
+npm run test:firefox            # Firefox only (~5 min)
+npm run test:webkit             # WebKit/Safari only (~5 min)
+```
+
+### 🌍 **Environment-Specific Commands**
+
+#### QA Environment (Google.com)
+```bash
+# Basic commands
+npm run test:qa                 # All tests on QA environment
+npm run test:smoke:qa           # Quick smoke tests (recommended)
+npm run test:regression:qa      # Full regression suite
+
+# Browser-specific QA testing
+npm run test:qa:chromium        # QA tests in Chromium only
+npm run test:qa:firefox         # QA tests in Firefox only  
+npm run test:qa:webkit          # QA tests in WebKit only
+```
+
+#### DEV Environment (VML.com)
+```bash
+# Basic commands
+npm run test:dev                # All tests on DEV environment
+npm run test:smoke:dev          # Quick smoke tests
+npm run test:regression:dev     # Full regression suite
+
+# Browser-specific DEV testing
+npm run test:dev:chromium       # DEV tests in Chromium only
+npm run test:dev:firefox        # DEV tests in Firefox only
+npm run test:dev:webkit         # DEV tests in WebKit only
+```
+
+#### PROD Environment (Microsoft.com)
+```bash
+# Basic commands (use carefully!)
+npm run test:prod               # All tests on PROD environment
+npm run test:smoke:prod         # Quick smoke tests (recommended for PROD)
+
+# Browser-specific PROD testing
+npm run test:prod:chromium      # PROD tests in Chromium only
+npm run test:prod:firefox       # PROD tests in Firefox only
+npm run test:prod:webkit        # PROD tests in WebKit only
+```
+
+### 🚀 **API Load Testing Commands**
+
+#### NPM Scripts (Recommended)
+```bash
+# Quick API load tests
+npm run api-load:qa             # API load test on QA
+npm run api-load:dev            # API load test on DEV
+
+# Legacy commands (same as above)
+npm run perf:qa                 # Same as api-load:qa
+npm run perf:dev                # Same as api-load:dev
+npm run jmeter:docker           # Same as api-load:qa
+```
+
+#### PowerShell Direct Commands (Advanced)
+```bash
+# Basic API load test
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Env qa
+
+# Custom parameters
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" `
+  -Users 50 `        # 50 virtual users
+  -RampUp 10 `       # 10 seconds ramp-up time
+  -Loops 5 `         # 5 iterations per user
+  -Env qa            # QA environment
+
+# Different environments
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Env dev
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Env qa
+```
+
+### 🎮 **Interactive Testing Modes**
+
+```bash
+# Visual/Interactive modes
+npm run test:ui                 # Playwright UI mode (interactive)
+npm run test:headed             # Run with visible browser windows
+npm run test:debug              # Debug mode with step-by-step execution
+
+# Specific test targeting
+npx playwright test tests/e2e/specs/smoke/google-header-links.spec.ts --headed
+npx playwright test --grep="@smoke" --project=chromium
+npx playwright test --grep="@regression" --project=firefox
+```
+
+### 📊 **Reporting Commands**
+
+```bash
+# View reports
+npm run test:report             # Open latest HTML report in browser
+npx playwright show-report      # Same as above
+
+# Generate fresh reports
+npm run test:smoke:qa && npm run test:report    # Run tests + view report
+```
+
+### 🔧 **VS Code Tasks (GUI Alternative)**
+
+**Open Command Palette (Ctrl+Shift+P) → "Tasks: Run Task" → Select:**
+
+1. **"Run Playwright (HTML Report)"** - Full test suite with HTML report
+2. **"Run JMeter API Load Test (Docker)"** - API load testing
+3. **"Run Both (Playwright + API Load Test)"** - Combined testing
+4. **"Open Playwright Report"** - View latest test report
+5. **"Open JMeter Report"** - View latest load test report
+
+### ⚡ **Common Workflows**
+
+#### Daily Development Workflow
+```bash
+# 1. Quick validation before committing
+npm run test:smoke:qa
+
+# 2. If smoke tests pass, run broader tests
+npm run test:regression:qa
+
+# 3. View results
+npm run test:report
+```
+
+#### Pre-Production Deployment
+```bash
+# 1. Run comprehensive tests on all environments
+npm run test:regression:qa
+npm run test:regression:dev
+npm run test:smoke:prod
+
+# 2. Run API load tests
+npm run api-load:qa
+npm run api-load:dev
+
+# 3. Review all reports
+npm run test:report
+```
+
+#### Troubleshooting Failed Tests
+```bash
+# 1. Run in debug mode
+npm run test:debug
+
+# 2. Run with visible browser
+npm run test:headed
+
+# 3. Run specific failing test
+npx playwright test tests/e2e/specs/smoke/specific-test.spec.ts --headed --debug
+```
+
+### 🚨 **Important Notes**
+
+- **Production Testing**: Use `test:smoke:prod` for production - avoid heavy regression tests
+- **API Load Tests**: All environments (qa/dev/prod) use safe external API endpoint
+- **Docker Required**: API load tests require Docker Desktop for JMeter execution
+- **Reports**: All test reports are automatically generated in `playwright-report/` directory
+- **Parallel Execution**: Tests run in parallel by default for faster execution
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -287,37 +464,148 @@ import { TestUtils } from './helpers/test-utils';
 
 ---
 
-## 🚀 JMeter Performance Testing
+## 🚀 JMeter API Load Testing
+
+### 📡 API Endpoint Testing
+
+**JMeter is configured to perform backend API load testing using:**
+- **API Endpoint**: `https://reqres.in/api/users?page=2`
+- **Method**: GET request
+- **Response Validation**: JSON structure and HTTP status codes
+- **All Environments**: DEV, QA, and PROD use the same safe API endpoint
 
 ### ⚠️ Production Protection
 
-**JMeter load testing is DISABLED for production environments** to prevent:
-- Unintended load on production systems
+**JMeter load testing uses a safe external API** to prevent:
+- Impact on production systems
 - Performance degradation for real users  
 - Potential service disruption
+
+### 📋 **Detailed Run Instructions**
+
+#### **Method 1: NPM Scripts (Recommended)**
+```bash
+# Basic API load testing
+npm run api-load:qa             # Run API load test on QA environment
+npm run api-load:dev            # Run API load test on DEV environment
+
+# Alternative commands (same functionality)
+npm run perf:qa                 # Legacy command for QA
+npm run perf:dev                # Legacy command for DEV
+npm run jmeter:docker           # Default to QA environment
+```
+
+#### **Method 2: PowerShell Direct (Advanced)**
+```bash
+# Basic usage
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Env qa
+
+# Customized load test parameters
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" `
+  -Users 100 `       # Number of virtual users (default: 10)
+  -RampUp 30 `       # Ramp-up time in seconds (default: 1) 
+  -Loops 10 `        # Number of iterations per user (default: 1)
+  -Env qa            # Environment: qa or dev (prod uses same safe API)
+
+# Example scenarios
+# Light load test
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Users 5 -RampUp 1 -Loops 1 -Env qa
+
+# Medium load test  
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Users 25 -RampUp 5 -Loops 3 -Env qa
+
+# Heavy load test
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Users 100 -RampUp 30 -Loops 5 -Env qa
+```
+
+#### **Method 3: VS Code Tasks (GUI)**
+1. **Open Command Palette**: `Ctrl+Shift+P` (Windows) or `Cmd+Shift+P` (Mac)
+2. **Type**: "Tasks: Run Task"
+3. **Select**: "Run JMeter API Load Test (Docker)"
+4. **Wait for completion** and check terminal output
+
+#### **Method 4: Combined Testing**
+```bash
+# Run both Playwright E2E tests and API load tests
+# Via VS Code task: "Run Both (Playwright + API Load Test)"
+
+# Or manually:
+npm run test:smoke:qa && npm run api-load:qa
+```
+
+### 📊 **Understanding Test Output**
+
+#### **Expected Output During Execution:**
+```bash
+🚀 JMeter API Load Test Configuration:
+  • Environment: qa
+  • API Endpoint: https://reqres.in/api/users?page=2
+  • Users: 10
+  • RampUp: 1 seconds
+  • Loops: 1
+
+Docker CLI found ✅
+Building JMeter Docker image...
+Running API load test...
+✅ Test completed successfully!
+📊 HTML Report: perf/jmeter/reports/html-report/index.html
+```
+
+#### **Viewing Results:**
+1. **HTML Report**: Automatically opens at `perf/jmeter/reports/html-report/index.html`
+2. **Raw Results**: Available in `perf/jmeter/results/results.jtl`
+3. **VS Code Task**: Use "Open JMeter Report" task to view latest report
+
+### 🚨 **Prerequisites & Troubleshooting**
+
+#### **Required Software:**
+- ✅ **Docker Desktop** - [Download](https://docker.com/products/docker-desktop)
+- ✅ **PowerShell** (Windows) or PowerShell Core (Mac/Linux)
+
+#### **Common Issues & Solutions:**
+
+**Docker not found:**
+```bash
+❌ Error: Docker CLI not found
+✅ Solution: Install Docker Desktop and ensure it's running
+```
+
+**Permission denied:**
+```bash
+❌ Error: ExecutionPolicy restricted
+✅ Solution: Run PowerShell as Administrator or use:
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Env qa
+```
+
+**Port conflicts:**
+```bash
+❌ Error: Port already in use
+✅ Solution: Stop other Docker containers:
+docker stop $(docker ps -q)
+```
 
 ### Quick Start
 
 ```bash
-# Run JMeter load test on QA environment (safe)
+# Run API load test (all environments use safe API)
+npm run api-load:qa
+npm run api-load:dev
+
+# Legacy commands (now updated for API testing)
 npm run perf:qa
-
-# Run JMeter load test on DEV environment (safe)
 npm run perf:dev
-
-# Legacy command (defaults to QA now)
 npm run jmeter:docker
 ```
 
-### Performance Test Configuration
+### API Load Test Configuration
 
-#### Available Environments for Load Testing
+#### Environment Configuration
 
-| Environment | Configuration File | Target URL | Status |
+| Environment | Configuration File | API Endpoint | Status |
 |-------------|-------------------|------------|--------|
-| **QA** | `perf/jmeter/plans/env/qa.properties` | Google | ✅ **Safe for load testing** |
-| **DEV** | `perf/jmeter/plans/env/dev.properties` | VML | ✅ **Safe for load testing** |
-| **PROD** | `perf/jmeter/plans/env/prod.properties` | Microsoft | ❌ **BLOCKED for safety** |
+| **QA** | `perf/jmeter/plans/env/qa.properties` | `https://reqres.in/api/users?page=2` | ✅ **Safe API testing** |
+| **DEV** | `perf/jmeter/plans/env/dev.properties` | `https://reqres.in/api/users?page=2` | ✅ **Safe API testing** |
+| **PROD** | `perf/jmeter/plans/env/prod.properties` | `https://reqres.in/api/users?page=2` | ✅ **Safe API testing** |
 
 #### Load Test Parameters
 
@@ -689,6 +977,82 @@ npm run test:report
 - **Node.js**: v18+ required
 - **JMeter**: v5.6.3 (Docker)
 - **Last Updated**: October 2025
+
+---
+
+## ⚡ Quick Reference Cheat Sheet
+
+### 🎯 **Most Common Commands**
+
+```bash
+# Quick testing (daily use)
+npm run test:smoke:qa           # Fast QA validation (2 min)
+npm run test:regression:qa      # Full QA testing (10 min)
+npm run test:report             # View latest test results
+
+# API load testing (performance)
+npm run api-load:qa             # API load test (5 min)
+npm run api-load:dev            # API load test on DEV
+
+# Combined testing
+# VS Code → Ctrl+Shift+P → "Tasks: Run Task" → "Run Both (Playwright + API Load Test)"
+```
+
+### 🌍 **Environment Quick Reference**
+
+| Command | Environment | URL | Use Case |
+|---------|-------------|-----|----------|
+| `npm run test:smoke:qa` | QA | google.com | Daily validation |
+| `npm run test:smoke:dev` | DEV | vml.com | Feature testing |
+| `npm run test:smoke:prod` | PROD | microsoft.com | Production health check |
+| `npm run api-load:qa` | API | reqres.in/api | Load testing (safe) |
+
+### 🔧 **VS Code Tasks Quick Access**
+
+**Ctrl+Shift+P → "Tasks: Run Task" → Select:**
+- **"Run Playwright (HTML Report)"** → Full E2E testing with report
+- **"Run JMeter API Load Test (Docker)"** → API performance testing  
+- **"Run Both (Playwright + API Load Test)"** → Complete test suite
+- **"Open Playwright Report"** → View latest E2E results
+- **"Open JMeter Report"** → View latest load test results
+
+### 🚨 **Emergency Debugging**
+
+```bash
+# Test failing? Try these in order:
+npm run test:debug              # Debug mode with breakpoints
+npm run test:headed             # Visual browser mode
+npm run test:ui                 # Interactive test runner
+
+# Specific test debugging:
+npx playwright test tests/e2e/specs/smoke/specific-test.spec.ts --headed --debug
+```
+
+### 📊 **Custom Load Test Parameters**
+
+```bash
+# Light load (development)
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Users 5 -RampUp 1 -Loops 1 -Env qa
+
+# Medium load (testing)  
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Users 25 -RampUp 5 -Loops 3 -Env qa
+
+# Heavy load (validation)
+powershell -ExecutionPolicy Bypass -File "scripts/run-jmeter-docker.ps1" -Users 100 -RampUp 30 -Loops 5 -Env qa
+```
+
+### 🛠️ **Setup & Installation (First Time)**
+
+```bash
+# Complete setup (run once):
+git clone https://github.com/npothapu/PLAYWRIGHTMCP.git
+cd PLAYWRIGHTMCP
+npm install
+npm run install-browsers
+
+# Verify installation:
+npm run test:smoke:qa
+```
 
 ---
 

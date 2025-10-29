@@ -18,7 +18,9 @@
     "install-browsers": "npx playwright install --with-deps",
     "perf:qa": "powershell -ExecutionPolicy Bypass -File ./scripts/run-jmeter-docker.ps1 -Users 10 -RampUp 1 -Loops 1 -Env qa",
     "perf:dev": "powershell -ExecutionPolicy Bypass -File ./scripts/run-jmeter-docker.ps1 -Users 10 -RampUp 1 -Loops 1 -Env dev",
-    "jmeter:docker": "npm run perf:qa"
+    "api-load:qa": "npm run perf:qa",
+    "api-load:dev": "npm run perf:dev",
+    "jmeter:docker": "npm run api-load:qa"
   },
   "keywords": ["playwright", "testing", "e2e", "automation", "qa"],
   "author": "",

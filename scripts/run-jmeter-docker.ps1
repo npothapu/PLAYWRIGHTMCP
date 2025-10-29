@@ -31,8 +31,9 @@ if ($Env -eq 'prod') {
 $RepoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $RepoRoot
 
-Write-Host "🚀 JMeter Load Test Configuration:" -ForegroundColor Cyan
+Write-Host "🚀 JMeter API Load Test Configuration:" -ForegroundColor Cyan
 Write-Host "  • Environment: $Env" -ForegroundColor White
+Write-Host "  • API Endpoint: https://reqres.in/api/users?page=2" -ForegroundColor White
 Write-Host "  • Users: $Users" -ForegroundColor White
 Write-Host "  • RampUp: $RampUp seconds" -ForegroundColor White
 Write-Host "  • Loops: $Loops" -ForegroundColor White

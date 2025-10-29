@@ -2,7 +2,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Run JMeter (Docker, local)",
+			"label": "Run JMeter API Load Test (Docker)",
 			"type": "shell",
 			"command": "powershell",
 			"args": [
@@ -69,14 +69,14 @@
 			"group": "test"
 		},
 		{
-			"label": "Run Both (Reports)",
+			"label": "Run Both (Playwright + API Load Test)",
 			"type": "shell",
 			"command": "powershell",
-			"args": ["-NoProfile","-Command","Write-Host 'Running Playwright + JMeter'"],
+			"args": ["-NoProfile","-Command","Write-Host 'Running Playwright E2E + JMeter API Load Test'"],
 			"dependsOn": [
 				"Run Playwright (HTML Report)",
 				"Open Playwright Report",
-				"Run JMeter (Docker)",
+				"Run JMeter API Load Test (Docker)",
 				"Open JMeter Report"
 			],
 			"dependsOrder": "sequence",
