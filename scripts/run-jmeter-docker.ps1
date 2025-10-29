@@ -3,10 +3,30 @@ param(
   [int]$RampUp = 1,
   [int]$Loops = 1,
   [ValidateSet('dev','qa','prod')]
-  [string]$Env = 'prod'
+  [string]$Env = 'qa'
 )
 
 $ErrorActionPreference = 'Stop'
+
+# PRODUCTION PROTECTION: Prevent JMeter load tests from running against production
+if ($Env -eq 'prod') {
+  Write-Host "❌ PRODUCTION PROTECTION ENABLED" -ForegroundColor Red
+  Write-Host ""
+  Write-Host "JMeter load testing is DISABLED for production environment to prevent:" -ForegroundColor Yellow
+  Write-Host "  • Unintended load on production systems" -ForegroundColor Yellow
+  Write-Host "  • Performance degradation for real users" -ForegroundColor Yellow
+  Write-Host "  • Potential service disruption" -ForegroundColor Yellow
+  Write-Host ""
+  Write-Host "✅ Available environments for load testing:" -ForegroundColor Green
+  Write-Host "  • dev  - Development environment (VML)" -ForegroundColor Green
+  Write-Host "  • qa   - QA environment (Google)" -ForegroundColor Green
+  Write-Host ""
+  Write-Host "To run load tests, use:" -ForegroundColor Cyan
+  Write-Host "  .\scripts\run-jmeter-docker.ps1 -Env qa" -ForegroundColor Cyan
+  Write-Host "  .\scripts\run-jmeter-docker.ps1 -Env dev" -ForegroundColor Cyan
+  Write-Host ""
+  exit 1
+}
 
 $RepoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $RepoRoot

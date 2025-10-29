@@ -3,12 +3,30 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "jmeter:docker": "powershell -ExecutionPolicy Bypass -File ./scripts/run-jmeter-docker.ps1 -Users 10 -RampUp 1 -Loops 1",
-    "test:functional": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Set-Location -Path './tests'; if (!(Test-Path node_modules)) { npm ci }; npx playwright install --with-deps; npx playwright test --reporter=line\""
+    "test:qa": "cross-env ENV=qa npx playwright test",
+    "test:dev": "cross-env ENV=dev npx playwright test",
+    "test:prod": "cross-env ENV=prod npx playwright test",
+    "test:smoke": "cross-env ENV=qa npx playwright test --grep='@smoke'",
+    "test:smoke:qa": "cross-env ENV=qa npx playwright test tests/e2e/specs/smoke",
+    "test:smoke:dev": "cross-env ENV=dev npx playwright test tests/e2e/specs/smoke",
+    "test:smoke:prod": "cross-env ENV=prod npx playwright test tests/e2e/specs/smoke",
+    "test:regression": "cross-env ENV=qa npx playwright test --grep='@regression'",
+    "test:chromium": "cross-env ENV=qa npx playwright test --project=chromium",
+    "test:headed": "cross-env ENV=qa npx playwright test --headed",
+    "test:debug": "cross-env ENV=qa npx playwright test --debug",
+    "test:report": "npx playwright show-report",
+    "install-browsers": "npx playwright install --with-deps",
+    "perf:qa": "powershell -ExecutionPolicy Bypass -File ./scripts/run-jmeter-docker.ps1 -Users 10 -RampUp 1 -Loops 1 -Env qa",
+    "perf:dev": "powershell -ExecutionPolicy Bypass -File ./scripts/run-jmeter-docker.ps1 -Users 10 -RampUp 1 -Loops 1 -Env dev",
+    "jmeter:docker": "npm run perf:qa"
   },
-  "keywords": [],
+  "keywords": ["playwright", "testing", "e2e", "automation", "qa"],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "devDependencies": {}
+  "description": "Comprehensive Playwright testing suite with environment management",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.9.2",
+    "cross-env": "^7.0.3"
+  }
 }
