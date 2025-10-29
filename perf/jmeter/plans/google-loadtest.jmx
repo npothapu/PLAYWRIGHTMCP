@@ -23,6 +23,11 @@
             <stringProp name="Argument.value">${__P(loops,1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="maxResponseTime" elementType="Argument">
+            <stringProp name="Argument.name">maxResponseTime</stringProp>
+            <stringProp name="Argument.value">${__P(maxResponseTime,5000)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
           <elementProp name="protocol" elementType="Argument">
             <stringProp name="Argument.name">protocol</stringProp>
             <stringProp name="Argument.value">${__P(protocol,https)}</stringProp>
@@ -142,9 +147,9 @@
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Time Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="1664">5000</stringProp>
+              <stringProp name="1664">${maxResponseTime}</stringProp>
             </collectionProp>
-            <stringProp name="Assertion.custom_message">Response time should be under 5 seconds</stringProp>
+            <stringProp name="Assertion.custom_message">Response time should be under configured threshold</stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_time</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">1</intProp>

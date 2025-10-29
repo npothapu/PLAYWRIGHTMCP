@@ -1,5 +1,5 @@
 param(
-  [int]$Users = 10,
+  [int]$Users = 3,
   [int]$RampUp = 1,
   [int]$Loops = 1,
   [ValidateSet('dev','qa','prod')]

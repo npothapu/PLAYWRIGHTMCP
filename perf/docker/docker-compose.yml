@@ -22,3 +22,4 @@ services:
       - -Jusers=10
       - -JrampUp=1
       - -Jloops=1
+      - -JmaxResponseTime=5000

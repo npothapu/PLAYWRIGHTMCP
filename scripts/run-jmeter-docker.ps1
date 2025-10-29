@@ -2,6 +2,7 @@ param(
   [int]$Users = 10,
   [int]$RampUp = 1,
   [int]$Loops = 1,
+  [int]$MaxResponseTime = 5000,
   [ValidateSet('dev','qa','prod')]
   [string]$Env = 'qa'
 )
@@ -37,6 +38,7 @@ Write-Host "  • API Endpoint: https://reqres.in/api/users?page=2" -ForegroundC
 Write-Host "  • Users: $Users" -ForegroundColor White
 Write-Host "  • RampUp: $RampUp seconds" -ForegroundColor White
 Write-Host "  • Loops: $Loops" -ForegroundColor White
+Write-Host "  • MaxResponseTime: $MaxResponseTime ms" -ForegroundColor White
 Write-Host ""
 
 # Helpful status about report locations (legacy vs active)
@@ -120,6 +122,7 @@ $cmd = @(
   "-Jusers=$Users",
   "-JrampUp=$RampUp",
   "-Jloops=$Loops"
+  ,"-JmaxResponseTime=$MaxResponseTime"
 )
 
 # Build
